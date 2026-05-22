@@ -1,0 +1,218 @@
+[
+  {
+    "slug": "sm-investments",
+    "name": "SM Investments Corporation (SMIC)",
+    "category": "Conglomerates & Retail",
+    "role": "Holding Company Services",
+    "cost": "0.00006",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Cross-subsidiary points ledger mapping and retail loyalty coordination."
+  },
+  {
+    "slug": "ayala-corp",
+    "name": "Ayala Corporation",
+    "category": "Conglomerates & Retail",
+    "role": "Infrastructure Development",
+    "cost": "0.00008",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Property management, utilities routing, and infrastructure ledger payments."
+  },
+  {
+    "slug": "san-miguel",
+    "name": "San Miguel Corporation (SMC)",
+    "category": "Conglomerates & Retail",
+    "role": "Industrial Infrastructure",
+    "cost": "0.00009",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Raw material procurement, logistics networks, and commercial packaging dispatch."
+  },
+  {
+    "slug": "jg-summit",
+    "name": "JG Summit Holdings",
+    "category": "Conglomerates & Retail",
+    "role": "Aviation & Petrochemical Operations",
+    "cost": "0.00007",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Aviation scheduling, petrochemical logistics, and retail commercial assets."
+  },
+  {
+    "slug": "alliance-global",
+    "name": "Alliance Global Group (AGI)",
+    "category": "Conglomerates & Retail",
+    "role": "Real Estate & Hospitality Services",
+    "cost": "0.00007",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Tourism coordination, real estate development, and fast-food logistics."
+  },
+  {
+    "slug": "aboitiz-equity",
+    "name": "Aboitiz Equity Ventures (AEV)",
+    "category": "Conglomerates & Retail",
+    "role": "Power & Infrastructure Operations",
+    "cost": "0.00008",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Power grid routing, clean energy allocation, and heavy industrial resources."
+  },
+  {
+    "slug": "puregold",
+    "name": "Puregold Price Club",
+    "category": "Conglomerates & Retail",
+    "role": "Supply Chain & Retail Distribution",
+    "cost": "0.00005",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Supermarket inventory check and commercial warehouse stock logistics."
+  },
+  {
+    "slug": "mercury-drug",
+    "name": "Mercury Drug Corporation",
+    "category": "Conglomerates & Retail",
+    "role": "Pharmaceutical Retail",
+    "cost": "0.00005",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Medical inventory lookup, prescription distribution, and pharmacy logistics."
+  },
+  {
+    "slug": "jollibee",
+    "name": "Jollibee Foods Corporation (JFC)",
+    "category": "Food & Beverage",
+    "role": "Franchise Logistics",
+    "cost": "0.00007",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Commercial supply chain replenishment and franchise operations management."
+  },
+  {
+    "slug": "universal-robina",
+    "name": "Universal Robina Corporation (URC)",
+    "category": "Food & Beverage",
+    "role": "Food Manufacturing",
+    "cost": "0.00006",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Raw material procurement, factory inventory audits, and snack distribution."
+  },
+  {
+    "slug": "century-pacific",
+    "name": "Century Pacific Food",
+    "category": "Food & Beverage",
+    "role": "Canned Food Production",
+    "cost": "0.00005",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Marine product processing, shelf-stable supply logistics, and stock replenishment."
+  },
+  {
+    "slug": "bdo-unibank",
+    "name": "BDO Unibank (Banco de Oro)",
+    "category": "Banking & Finance",
+    "role": "Commercial Banking & Treasury",
+    "cost": "0.00007",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Peso clearance networks, high-volume merchant settlements, and treasury verification."
+  },
+  {
+    "slug": "bpi-bank",
+    "name": "Bank of the Philippine Islands (BPI)",
+    "category": "Banking & Finance",
+    "role": "Retail & Business Finance",
+    "cost": "0.00007",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Corporate escrow services, retail transaction tracking, and secure deposit routing."
+  },
+  {
+    "slug": "metrobank",
+    "name": "Metropolitan Bank and Trust Company (Metrobank)",
+    "category": "Banking & Finance",
+    "role": "Institutional Treasury & Credit",
+    "cost": "0.00006",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Commercial loan disbursement, foreign exchange auditing, and settlement networks."
+  },
+  {
+    "slug": "security-bank",
+    "name": "Security Bank Corporation",
+    "category": "Banking & Finance",
+    "role": "Wholesale & Investment Banking",
+    "cost": "0.00006",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Capital market brokerage, wholesale deposit settlements, and cash management."
+  },
+  {
+    "slug": "openai",
+    "name": "OpenAI",
+    "category": "Software & Tech",
+    "role": "Cognitive Models & Text Synthesis",
+    "cost": "0.00012",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "General purpose intelligence generation, complex logic reasoning, and code drafting."
+  },
+  {
+    "slug": "anthropic",
+    "name": "Anthropic",
+    "category": "Software & Tech",
+    "role": "Code Auditing & Safety Evaluation",
+    "cost": "0.00010",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Static program verification, safety alignments, and semantic parsing."
+  },
+  {
+    "slug": "github",
+    "name": "GitHub",
+    "category": "Software & Tech",
+    "role": "Repository Integration & Webhooks",
+    "cost": "0.00004",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Version control branching, actions automation, and code distribution."
+  },
+  {
+    "slug": "google",
+    "name": "Google",
+    "category": "Software & Tech",
+    "role": "Cloud Storage & Search Indices",
+    "cost": "0.00011",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Data indexing, cloud storage allocation, and identity federation services."
+  },
+  {
+    "slug": "microsoft",
+    "name": "Microsoft",
+    "category": "Software & Tech",
+    "role": "Enterprise Directory & Infrastructure",
+    "cost": "0.00011",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Active Directory permissions, cloud virtual network deployment, and SQL clusters."
+  },
+  {
+    "slug": "gma-network",
+    "name": "GMA Network",
+    "category": "Entertainment & Media",
+    "role": "Broadcasting & Digital Ads",
+    "cost": "0.00005",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "National media airtime, advertisement allocation, and syndication tracking."
+  },
+  {
+    "slug": "abs-cbn",
+    "name": "ABS-CBN",
+    "category": "Entertainment & Media",
+    "role": "Digital Content Production",
+    "cost": "0.00005",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Content licensing catalog, online streaming rights, and talent databases."
+  },
+  {
+    "slug": "netflix",
+    "name": "Netflix",
+    "category": "Entertainment & Media",
+    "role": "Subscription Streaming Delivery",
+    "cost": "0.00008",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Regional content delivery network distribution and video encoding pipelines."
+  },
+  {
+    "slug": "disney",
+    "name": "Disney",
+    "category": "Entertainment & Media",
+    "role": "Mass Media Cataloging",
+    "cost": "0.00008",
+    "recipient": "0xE95a27cFCEaEada25616fF33e15a90Ac3052c065",
+    "description": "Intellectual property verification, media database indexing, and marketing rights."
+  }
+]
