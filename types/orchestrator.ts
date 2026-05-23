@@ -42,6 +42,7 @@ export interface LedgerEntry {
   txHash?: string;
   realOnChain?: boolean;
   message: string;
+  gasFee?: string;
 }
 
 export interface ExecutionSession {

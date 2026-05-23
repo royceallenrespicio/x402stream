@@ -93,7 +93,7 @@ export default function WalletWidget({
               Mock ETH Balance
             </div>
             <div className="mt-2 text-2xl font-bold text-foreground">
-              {mockBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETH
+              {mockBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ETH
             </div>
             <div className="text-[10px] text-muted-foreground/80 mt-1">Autonomous gas-free simulated budget</div>
           </div>

@@ -173,7 +173,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 {/* Mock Cash Balance */}
                 <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-2.5 py-1 text-[10px] font-semibold text-muted-foreground">
                   <span className="text-muted-foreground/80 uppercase tracking-wider text-[8px] font-bold">Mock:</span>
-                  <span className="text-foreground">{mockBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETH</span>
+                  <span className="text-foreground">{mockBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ETH</span>
                 </div>
 
                 {/* Morph Testnet ETH */}

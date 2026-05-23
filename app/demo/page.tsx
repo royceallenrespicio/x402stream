@@ -88,7 +88,6 @@ export default function DemoPage() {
       <DashboardHeader
         running={running}
         customAgentsLength={customAgents.length}
-        resetPipeline={resetPipeline}
       />
 
       {/* Top Section: Agent Workspace */}

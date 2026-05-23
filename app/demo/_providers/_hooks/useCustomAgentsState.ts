@@ -28,7 +28,7 @@ export const PRESET_AGENTS: CustomAgent[] = [
 ];
 
 export function useCustomAgentsState() {
-  const [customAgents, setCustomAgents] = useState<CustomAgent[]>(PRESET_AGENTS);
+  const [customAgents, setCustomAgents] = useState<CustomAgent[]>([]);
 
   const addCustomAgent = (agent: Omit<CustomAgent, 'id'>): boolean => {
     if (customAgents.length >= 10) return false;

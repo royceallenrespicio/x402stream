@@ -21,6 +21,7 @@ interface LedgerItemRowProps {
     recipient: string;
     cost: string;
     txHash?: string;
+    gasFee?: string;
   };
 }
 
@@ -62,6 +63,9 @@ function LedgerItemRow({ entry }: LedgerItemRowProps) {
         <div className="text-[10px] space-y-1.5 text-muted-foreground font-medium flex-1 min-w-0">
           <div className="truncate">TO RECIPIENT: <span className="font-mono text-foreground font-semibold">{entry.recipient}</span></div>
           <div>TRANSACTION COST: <span className="font-mono text-foreground font-bold">{entry.cost} ETH</span></div>
+          {entry.gasFee && (
+            <div>GAS FEE: <span className="font-mono text-foreground font-semibold">{entry.gasFee}</span></div>
+          )}
           {entry.txHash && (
             <>
               <div className="truncate pb-1">TX HASH: <span className="font-mono text-foreground font-semibold">{entry.txHash}</span></div>

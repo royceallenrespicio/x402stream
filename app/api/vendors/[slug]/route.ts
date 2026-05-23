@@ -3,6 +3,7 @@ import { publicClient } from '@/lib/morph';
 import vendorsData from '@/app/_data/vendors.json';
 import { createGroq } from '@ai-sdk/groq';
 import { generateText } from 'ai';
+import { formatEther } from 'viem';
 
 const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY || '',
@@ -137,7 +138,7 @@ Example: ${vendor.name}: Database entry synchronized. Reference ID: ${slug.toUpp
             model: groq(MODEL_NAME),
             prompt,
           });
-          dynamicResult = response.text.trim();
+          dynamicResult = sanitizePlaintext(response.text);
         } catch (e) {
           console.error("Failed to generate dynamic vendor result:", e);
         }
@@ -147,6 +148,24 @@ Example: ${vendor.name}: Database entry synchronized. Reference ID: ${slug.toUpp
     // Fallback dynamic generator if Groq is not configured or failed
     if (!dynamicResult) {
       dynamicResult = `${vendor.name}: Action processed successfully. Unlocked actions matching request ID ${slug.toUpperCase()}-${Math.floor(Math.random() * 90000) + 10000}.`;
+    }
+
+    // Calculate real or mock gas fee
+    let gasFeeVal = '0.000021'; // Default realistic fallback
+    if (isRealTransaction) {
+      try {
+        const receipt = await publicClient.getTransactionReceipt({
+          hash: paymentSignature as `0x${string}`
+        });
+        if (receipt) {
+          const gasPrice = receipt.effectiveGasPrice || BigInt(1000000000); // fallback to 1 gwei
+          const fee = receipt.gasUsed * gasPrice;
+          gasFeeVal = formatEther(fee);
+        }
+      } catch {}
+    } else {
+      // Generate a realistic mock gas fee between 0.000021 and 0.000045
+      gasFeeVal = (0.000021 + Math.random() * 0.000024).toFixed(6);
     }
 
     // Return the successful response with a 200 OK
@@ -159,7 +178,8 @@ Example: ${vendor.name}: Database entry synchronized. Reference ID: ${slug.toUpp
       signature: paymentSignature,
       verification: verificationDetail,
       realOnChain: isRealTransaction,
-      result: dynamicResult
+      result: dynamicResult,
+      gasFee: `${gasFeeVal} ETH`
     });
 
   } catch (error: unknown) {
@@ -167,6 +187,44 @@ Example: ${vendor.name}: Database entry synchronized. Reference ID: ${slug.toUpp
     const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ error: 'Internal Server Error', details: errorMessage }, { status: 500 });
   }
+}
+
+export function sanitizePlaintext(text: string): string {
+  let cleaned = text.trim();
+  
+  // 1. Remove markdown code blocks if any (e.g. ```json ... ``` or ``` ... ```)
+  cleaned = cleaned.replace(/```(?:[a-zA-Z0-9]+)?\n([\s\S]*?)\n```/g, '$1');
+  cleaned = cleaned.replace(/```[\s\S]*?```/g, ''); // strip any remaining
+  
+  cleaned = cleaned.trim();
+  
+  // 2. If it still looks like a JSON block (starts with { or [), try to parse it
+  if ((cleaned.startsWith('{') && cleaned.endsWith('}')) || (cleaned.startsWith('[') && cleaned.endsWith(']'))) {
+    try {
+      const parsed = JSON.parse(cleaned);
+      if (typeof parsed === 'string') {
+        cleaned = parsed;
+      } else if (Array.isArray(parsed)) {
+        cleaned = parsed.map(item => typeof item === 'object' ? JSON.stringify(item) : String(item)).join('\n');
+      } else if (typeof parsed === 'object' && parsed !== null) {
+        // Extract values from the object
+        const values = Object.values(parsed).map(val => typeof val === 'object' ? JSON.stringify(val) : String(val));
+        cleaned = values.join('\n');
+      }
+    } catch {
+      // Keep original string if parsing fails
+    }
+  }
+
+  // 3. Remove quotes around the whole string
+  if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
+    cleaned = cleaned.slice(1, -1);
+  }
+  if (cleaned.startsWith("'") && cleaned.endsWith("'")) {
+    cleaned = cleaned.slice(1, -1);
+  }
+  
+  return cleaned.trim();
 }
 
 // Support GET requests by triggering a challenge directly

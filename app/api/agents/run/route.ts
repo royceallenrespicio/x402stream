@@ -75,22 +75,27 @@ export async function POST(req: Request) {
               if (process.env.GROQ_API_KEY) {
                 const response = await generateText({
                   model: groq(MODEL_NAME),
-                  maxOutputTokens: 1000,
+                  maxOutputTokens: 500,
                   prompt: `You are ${agent.name}, an autonomous AI agent with the role: "${agent.role}".
 Your specific task instructions are: "${agent.prompt}".
 The multi-agent pipeline is working toward the collective goal: "${goal}".
 Previous agent outputs so far:
 "${previousOutput}"
 
-Write 3 short internal execution log entries (each 1-3 sentences) that mimic the real-time thought process of an AI agent technically accessing a vendor's REST API using the x402 payment protocol. Focus ONLY on the technical API interaction steps:
+Write 3 short internal execution log entries (each 1-3 sentences) that mimic the real-time thought process of an AI agent technically accessing a vendor's REST API using the x402 payment protocol. Focus ONLY on the technical API interaction steps.
 
-1. First entry: Describe constructing the initial HTTP POST request to the vendor endpoint /api/vendors/${agent.vendorSlug}. Mention the request payload structure (goal, agentName, agentRole), expected content-type headers, and what data you need from ${vendor.name}'s API (${vendor.role}).
-2. Second entry: Describe receiving the HTTP 402 Payment Required response. Detail parsing the Payment-Required response header containing challengeId, amount (${vendor.cost} ETH), recipient address (${vendor.recipient}), and chainId 2910 (Morph Hoodi Testnet). Mention preparing the EIP-712 payment signature.
-3. Third entry: Describe re-submitting the request with Payment-Signature and Challenge-Id headers attached, expecting a 200 OK response with the unlocked vendor resource/data.
+Guardrails:
+- Do NOT use JSON syntax, curly braces {}, brackets [], or markdown blockquotes in your response.
+- Do NOT output any payload structure or raw code snippets.
+- Write each entry as a plain text description of a step.
+- Focus strictly on the following flow:
+  1. First entry: Constructing the initial HTTP POST request to the vendor endpoint under /api/vendors/${agent.vendorSlug} to check resource access for ${vendor.name}'s API.
+  2. Second entry: Receiving the HTTP 402 Payment Required challenge from the vendor, containing challenge details for ${vendor.cost} ETH to recipient address ${vendor.recipient} on Morph Hoodi Testnet, and preparing the EIP-712 typed payment signature.
+  3. Third entry: Re-submitting the POST request with the completed Payment-Signature and Challenge-Id attached, expecting a 200 OK response with the unlocked vendor resource.
 
-Separate each entry with a blank line. Write it as raw internal execution logs — no greetings, no explanations of benefits, no conversational tone. Be terse and technical.`,
+Separate each entry with a blank line. Write it as raw internal execution logs — no greetings, no conversational tone. Be terse and technical.`,
                 });
-                reasoning = response.text.trim();
+                reasoning = sanitizePlaintext(response.text);
                 thoughts = reasoning.split(/\n+/).map(t => t.trim()).filter(Boolean);
                 if (thoughts.length < 2) {
                   thoughts = splitThoughts(reasoning);
@@ -104,7 +109,8 @@ Separate each entry with a blank line. Write it as raw internal execution logs �
                 vendor.name,
                 vendor.cost,
                 vendor.recipient,
-                goal
+                goal,
+                agent.vendorSlug
               );
             }
 
@@ -113,7 +119,7 @@ Separate each entry with a blank line. Write it as raw internal execution logs �
               sendEvent('agent-reasoning', {
                 agentId: agent.id,
                 agentName: agent.name,
-                reasoning: thoughts[tIdx],
+                reasoning: sanitizePlaintext(thoughts[tIdx]),
                 status: 'calling_vendor',
                 message: `${agent.name} is assessing task step ${tIdx + 1}/${thoughts.length}...`
               });
@@ -234,7 +240,8 @@ Separate each entry with a blank line. Write it as raw internal execution logs �
               result: successBody.result,
               verification: successBody.verification,
               realOnChain: successBody.realOnChain,
-              message: `${agent.name} successfully resolved payment and unlocked vendor assets.`
+              message: `${agent.name} successfully resolved payment and unlocked vendor assets.`,
+              gasFee: successBody.gasFee
             });
 
             await new Promise(r => setTimeout(r, d4));
@@ -314,57 +321,57 @@ function generateDynamicThoughts(
   vendorName: string,
   vendorCost: string,
   vendorRecipient: string,
-  goal: string
+  goal: string,
+  vendorSlug: string
 ): string[] {
-  const randElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
   const randInt = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
   const randMs = () => randInt(45, 320);
 
-  // Determine vendor slug from name for endpoint construction
-  const vendorSlug = vendorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-  if (agentName === 'OFWRemitRouter') {
-    const reqIds = [`req_${randInt(100000, 999999)}`, `req_${randInt(100000, 999999)}`];
-    const chalIds = [`chal_bdo-unibank_${randInt(10000, 99999)}`];
-    const statusCodes = ['402 Payment Required'];
-
-    return [
-      `Constructing HTTP POST to /api/vendors/bdo-unibank — payload: { goal: "${goal}", agentName: "${agentName}", agentRole: "Cross-Border Remittance & L2 Wallet Dispatcher" }. Content-Type: application/json. Request ID: ${randElement(reqIds)}. Need BDO's treasury clearance endpoint to route inbound OFW remittance funds into local GCash/PayMaya digital wallets.`,
-      `Response received: HTTP ${randElement(statusCodes)}. Parsing Payment-Required header — challengeId: "${randElement(chalIds)}", amount: "${vendorCost}" ETH, recipient: "${vendorRecipient}", chainId: 2910 (Morph Hoodi). Preparing EIP-712 typed signature on Morph L2 for ${vendorCost} ETH to ${vendorRecipient}. Estimated gas: ${randInt(21000, 48000)} units. Latency to sign: ${randMs()}ms.`,
-      `Re-submitting POST to /api/vendors/bdo-unibank with headers { Payment-Signature: "0x...", Challenge-Id: "${randElement(chalIds)}" }. Expecting 200 OK with unlocked treasury clearance receipt and remittance routing confirmation from ${vendorName}.`
-    ];
-  }
-
-  if (agentName === 'GridPowerOptimizer') {
-    const reqIds = [`req_${randInt(100000, 999999)}`];
-    const chalIds = [`chal_aboitiz-equity_${randInt(10000, 99999)}`];
-
-    return [
-      `Constructing HTTP POST to /api/vendors/aboitiz-equity — payload: { goal: "${goal}", agentName: "${agentName}", agentRole: "Prepaid Smart Meter Utility Settlement" }. Content-Type: application/json. Request ID: ${randElement(reqIds)}. Querying AEV power grid API to authorize prepaid meter top-up for low-balance residential clusters.`,
-      `Response received: HTTP 402 Payment Required. Parsing Payment-Required header — challengeId: "${randElement(chalIds)}", amount: "${vendorCost}" ETH, recipient: "${vendorRecipient}", chainId: 2910 (Morph Hoodi). Constructing EIP-712 payment authorization. Gas estimate: ${randInt(18000, 35000)} units. Wallet nonce lookup: ${randMs()}ms.`,
-      `Re-submitting POST to /api/vendors/aboitiz-equity with headers { Payment-Signature: "0x...", Challenge-Id: "${randElement(chalIds)}" }. Awaiting 200 OK with grid utility ledger confirmation and automated prepaid meter reload signal from ${vendorName}.`
-    ];
-  }
-
-  if (agentName === 'BenguetAgriSettle') {
-    const reqIds = [`req_${randInt(100000, 999999)}`];
-    const chalIds = [`chal_jollibee_${randInt(10000, 99999)}`];
-
-    return [
-      `Constructing HTTP POST to /api/vendors/jollibee — payload: { goal: "${goal}", agentName: "${agentName}", agentRole: "Farm-to-Table Supply Chain Custodian" }. Content-Type: application/json. Request ID: ${randElement(reqIds)}. Requesting JFC logistics API to trigger warehouse receipt confirmation and cold-chain delivery settlement.`,
-      `Response received: HTTP 402 Payment Required. Parsing Payment-Required header — challengeId: "${randElement(chalIds)}", amount: "${vendorCost}" ETH, recipient: "${vendorRecipient}", chainId: 2910 (Morph Hoodi). Preparing EIP-712 typed data signature for on-chain settlement. Gas estimate: ${randInt(28000, 45000)} units. Signing latency: ${randMs()}ms.`,
-      `Re-submitting POST to /api/vendors/jollibee with headers { Payment-Signature: "0x...", Challenge-Id: "${randElement(chalIds)}" }. Expecting 200 OK with delivery confirmation record, cooperative payout receipt, and supply chain verification hash from ${vendorName}.`
-    ];
-  }
-
-  // Generic fallback for any custom agent/vendor combo
   const chalId = `chal_${vendorSlug}_${randInt(10000, 99999)}`;
   const reqId = `req_${randInt(100000, 999999)}`;
 
   return [
-    `Constructing HTTP POST to /api/vendors/${vendorSlug} — payload: { goal: "${goal}", agentName: "${agentName}" }. Content-Type: application/json. Request ID: ${reqId}. Querying ${vendorName} API for resource access required by current pipeline stage.`,
-    `Response received: HTTP 402 Payment Required. Parsing Payment-Required header — challengeId: "${chalId}", amount: "${vendorCost}" ETH, recipient: "${vendorRecipient}", chainId: 2910 (Morph Hoodi). Preparing EIP-712 payment proof. Gas estimate: ${randInt(21000, 45000)} units. Signature construction: ${randMs()}ms.`,
-    `Re-submitting POST to /api/vendors/${vendorSlug} with headers { Payment-Signature: "0x...", Challenge-Id: "${chalId}" }. Awaiting 200 OK with unlocked vendor resource payload from ${vendorName}.`
+    `Constructing HTTP POST to /api/vendors/${vendorSlug} with request ID ${reqId}. Querying ${vendorName} API for resource access required by the pipeline goal to ${goal.replace(/"/g, '')}.`,
+    `Response received: HTTP 402 Payment Required. challengeId is ${chalId}, amount is ${vendorCost} ETH, and recipient address is ${vendorRecipient} on Morph Hoodi Testnet. Preparing EIP-712 payment proof with gas estimate of ${randInt(21000, 45000)} units. Signature construction latency: ${randMs()}ms.`,
+    `Re-submitting POST to /api/vendors/${vendorSlug} with headers Payment-Signature and Challenge-Id ${chalId}. Awaiting 200 OK with unlocked vendor resource payload from ${vendorName}.`
   ];
+}
+
+export function sanitizePlaintext(text: string): string {
+  let cleaned = text.trim();
+  
+  // 1. Remove markdown code blocks if any (e.g. ```json ... ``` or ``` ... ```)
+  cleaned = cleaned.replace(/```(?:[a-zA-Z0-9]+)?\n([\s\S]*?)\n```/g, '$1');
+  cleaned = cleaned.replace(/```[\s\S]*?```/g, ''); // strip any remaining
+  
+  cleaned = cleaned.trim();
+  
+  // 2. If it still looks like a JSON block (starts with { or [), try to parse it
+  if ((cleaned.startsWith('{') && cleaned.endsWith('}')) || (cleaned.startsWith('[') && cleaned.endsWith(']'))) {
+    try {
+      const parsed = JSON.parse(cleaned);
+      if (typeof parsed === 'string') {
+        cleaned = parsed;
+      } else if (Array.isArray(parsed)) {
+        cleaned = parsed.map(item => typeof item === 'object' ? JSON.stringify(item) : String(item)).join('\n');
+      } else if (typeof parsed === 'object' && parsed !== null) {
+        // Extract values from the object
+        const values = Object.values(parsed).map(val => typeof val === 'object' ? JSON.stringify(val) : String(val));
+        cleaned = values.join('\n');
+      }
+    } catch {
+      // Keep original string if parsing fails
+    }
+  }
+
+  // 3. Remove quotes around the whole string
+  if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
+    cleaned = cleaned.slice(1, -1);
+  }
+  if (cleaned.startsWith("'") && cleaned.endsWith("'")) {
+    cleaned = cleaned.slice(1, -1);
+  }
+  
+  return cleaned.trim();
 }
 

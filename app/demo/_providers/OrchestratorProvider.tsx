@@ -32,6 +32,7 @@ interface PipelineEventData {
   realOnChain?: boolean;
   finalSummary?: string;
   error?: string;
+  gasFee?: string;
 }
 
 interface OrchestratorContextType {
@@ -282,24 +283,26 @@ export function OrchestratorProvider({ children }: { children: React.ReactNode }
             const res = data.result;
             const amsg = data.message;
             const isReal = !!data.realOnChain;
+            const gasFee = data.gasFee || '0.000021 ETH';
 
             updatedAgents = updatedAgents.map(a => a.id === aid ? { ...a, status: 'completed', message: amsg, result: res } : a);
 
             updatedLedger = updatedLedger.map(l => l.agent === (data.agentName || aid) && (l.status === 'paying' || l.status === 'challenged') ? {
               ...l,
               status: 'fulfilled',
-              realOnChain: isReal
+              realOnChain: isReal,
+              gasFee: gasFee
             } : l);
 
             if (!isReal) {
-              const agentObj = customAgents.find(a => a.id === aid);
+              const agentObj = updatedAgents.find(a => a.id === aid);
               const vendorSlug = agentObj?.vendorSlug;
               const vendor = vendorsData.find(v => v.slug === vendorSlug);
               const cost = vendor ? parseFloat(vendor.cost) : 0.00;
               setMockBalance(prev => Math.max(0, prev - cost));
             }
 
-            updatedLogs.push(`[${data.agentName || aid}]: Step resolved! Resource unlocked successfully.`);
+            updatedLogs.push(`[${data.agentName || aid}]: Step resolved! Resource unlocked successfully. Gas Fee: ${gasFee}`);
           }
           break;
 

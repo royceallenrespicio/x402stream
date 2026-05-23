@@ -90,97 +90,131 @@ export default function AgentWorkspace({
       </div>
 
       {/* Agents Assembly Grid */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
-      >
-        {paginatedAgents.map((agent) => {
-          const mappedVendor = VENDORS_MAP.find((v) => v.slug === agent.vendorSlug);
+      {customAgents.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center justify-center border border-dashed border-border bg-card/45 backdrop-blur-sm rounded-2xl p-8 text-center min-h-[220px] space-y-4 w-full"
+        >
+          <div className="h-12 w-12 rounded-2xl bg-muted border border-border flex items-center justify-center text-muted-foreground shadow-inner">
+            <Plus className="h-6 w-6" />
+          </div>
+          <div className="max-w-sm space-y-1.5">
+            <h3 className="text-sm font-extrabold text-foreground uppercase tracking-wide">No Agents Assembled</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Assemble your custom AI agents to start building automatic HTTP 402 payment pipelines, or load the preset showcase agents.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button
+              onClick={loadPresets}
+              disabled={running}
+              className="inline-flex items-center justify-center px-4 py-2 text-xs font-extrabold rounded-xl border border-border bg-card hover:bg-accent text-foreground transition-all cursor-pointer pointer-events-auto shadow-sm disabled:opacity-40"
+            >
+              Load Default Presets
+            </button>
+            <button
+              onClick={triggerAddForm}
+              disabled={running}
+              className="inline-flex items-center justify-center px-4 py-2 text-xs font-extrabold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-all cursor-pointer pointer-events-auto shadow-md disabled:opacity-40"
+            >
+              Create Custom Agent
+            </button>
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+        >
+          {paginatedAgents.map((agent) => {
+            const mappedVendor = VENDORS_MAP.find((v) => v.slug === agent.vendorSlug);
 
-          return (
-            <motion.div key={agent.id} variants={staggerItem} layout>
-              <Card className="border border-border/60 bg-card hover:border-border transition-all duration-300 py-0">
-                <CardContent className="p-4 flex flex-col justify-between h-full min-h-[170px] gap-3.5">
-                  <div className="space-y-1.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-extrabold text-foreground truncate max-w-[180px] sm:max-w-[280px] md:max-w-[200px] lg:max-w-[280px] xl:max-w-[340px]">
-                          {agent.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground font-semibold mt-0.5 truncate max-w-[180px] sm:max-w-[280px] md:max-w-[200px] lg:max-w-[280px] xl:max-w-[340px]">
-                          {agent.role}
-                        </p>
+            return (
+              <motion.div key={agent.id} variants={staggerItem} layout>
+                <Card className="border border-border/60 bg-card hover:border-border transition-all duration-300 py-0">
+                  <CardContent className="p-4 flex flex-col justify-between h-full min-h-[170px] gap-3.5">
+                    <div className="space-y-1.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-extrabold text-foreground truncate max-w-[180px] sm:max-w-[280px] md:max-w-[200px] lg:max-w-[280px] xl:max-w-[340px]">
+                            {agent.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground font-semibold mt-0.5 truncate max-w-[180px] sm:max-w-[280px] md:max-w-[200px] lg:max-w-[280px] xl:max-w-[340px]">
+                            {agent.role}
+                          </p>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className="border-border/40 bg-muted/40 text-foreground/80 text-[10px] font-mono whitespace-nowrap"
+                        >
+                          {mappedVendor?.cost || '0.00'} ETH
+                        </Badge>
                       </div>
-                      <Badge
-                        variant="outline"
-                        className="border-border/40 bg-muted/40 text-foreground/80 text-[10px] font-mono whitespace-nowrap"
-                      >
-                        {mappedVendor?.cost || '0.00'} ETH
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-foreground/95 leading-relaxed line-clamp-3 italic font-medium">
-                      &ldquo;{agent.prompt}&rdquo;
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-border/50 flex items-center justify-between">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[10px] text-muted-foreground font-mono">
-                        MAPPED VENDOR: <strong className="text-foreground/85 font-bold">{mappedVendor?.name || 'Unknown'}</strong>
-                      </span>
+                      <p className="text-xs text-foreground/95 leading-relaxed line-clamp-3 italic font-medium">
+                        &ldquo;{agent.prompt}&rdquo;
+                      </p>
                     </div>
 
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => runSingleAgent(agent)}
-                        className="text-muted-foreground hover:text-emerald-500 transition-colors pointer-events-auto cursor-pointer p-0.5 rounded-md hover:bg-muted/30"
-                        title="Run Agent Individually"
-                      >
-                        <Play className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleStartEdit(agent)}
-                        disabled={running}
-                        className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30 pointer-events-auto cursor-pointer p-0.5 rounded-md hover:bg-muted/30"
-                        title="Edit Agent Parameters"
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        onClick={() => deleteCustomAgent(agent.id)}
-                        disabled={running}
-                        className="text-muted-foreground hover:text-rose-500 transition-colors disabled:opacity-30 pointer-events-auto cursor-pointer p-0.5 rounded-md hover:bg-muted/30"
-                        title="Delete Agent"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
+                    <div className="pt-2 border-t border-border/50 flex items-center justify-between">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] text-muted-foreground font-mono">
+                          MAPPED VENDOR: <strong className="text-foreground/85 font-bold">{mappedVendor?.name || 'Unknown'}</strong>
+                        </span>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => runSingleAgent(agent)}
+                          className="text-muted-foreground hover:text-emerald-500 transition-colors pointer-events-auto cursor-pointer p-0.5 rounded-md hover:bg-muted/30"
+                          title="Run Agent Individually"
+                        >
+                          <Play className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleStartEdit(agent)}
+                          disabled={running}
+                          className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30 pointer-events-auto cursor-pointer p-0.5 rounded-md hover:bg-muted/30"
+                          title="Edit Agent Parameters"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => deleteCustomAgent(agent.id)}
+                          disabled={running}
+                          className="text-muted-foreground hover:text-rose-500 transition-colors disabled:opacity-30 pointer-events-auto cursor-pointer p-0.5 rounded-md hover:bg-muted/30"
+                          title="Delete Agent"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+
                     </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
 
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })}
-
-        {/* Create Custom Agent card toggler */}
-        {renderCreateCard && (
-          <motion.button
-            variants={staggerItem}
-            onClick={triggerAddForm}
-            disabled={running}
-            className="flex flex-col items-center justify-center border-2 border-dashed border-border hover:border-primary/50 bg-muted/10 hover:bg-muted/20 rounded-xl py-6 min-h-[170px] text-center transition-all disabled:opacity-40 group pointer-events-auto cursor-pointer w-full"
-          >
-            <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:border-primary/50 border border-border transition-colors mb-2">
-              <Plus className="h-5 w-5" />
-            </div>
-            <span className="text-xs font-semibold text-foreground/90 group-hover:text-foreground transition-colors">Create Custom Agent</span>
-            <span className="text-[10px] text-muted-foreground mt-1 group-hover:text-muted-foreground/80 transition-colors">Add details, roles and vendor mappings</span>
-          </motion.button>
-        )}
-      </motion.div>
+          {/* Create Custom Agent card toggler */}
+          {renderCreateCard && (
+            <motion.button
+              variants={staggerItem}
+              onClick={triggerAddForm}
+              disabled={running}
+              className="flex flex-col items-center justify-center border-2 border-dashed border-border hover:border-primary/50 bg-muted/10 hover:bg-muted/20 rounded-xl py-6 min-h-[170px] text-center transition-all disabled:opacity-40 group pointer-events-auto cursor-pointer w-full"
+            >
+              <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:border-primary/50 border border-border transition-colors mb-2">
+                <Plus className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-semibold text-foreground/90 group-hover:text-foreground transition-colors">Create Custom Agent</span>
+              <span className="text-[10px] text-muted-foreground mt-1 group-hover:text-muted-foreground/80 transition-colors">Add details, roles and vendor mappings</span>
+            </motion.button>
+          )}
+        </motion.div>
+      )}
 
       {/* Workspace Pagination Controls */}
       {totalPages > 1 && (

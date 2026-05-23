@@ -5,7 +5,7 @@ import { getAccountFromKey, getMorphBalance } from '@/lib/morph';
 
 export function useWalletState(customRpcUrl?: string) {
   const [privateKey, setPrivateKeyInternal] = useState<string>('');
-  const [mockBalance, setMockBalance] = useState<number>(1000.00);
+  const [mockBalance, setMockBalance] = useState<number>(1.50);
   const [realBalance, setRealBalance] = useState<string>('0.00');
 
   // Load from local storage
@@ -17,7 +17,16 @@ export function useWalletState(customRpcUrl?: string) {
         setPrivateKeyInternal(savedKey);
       }
       if (savedMock) {
-        setMockBalance(parseFloat(savedMock));
+        const val = parseFloat(savedMock);
+        if (val === 1000.00) {
+          setMockBalance(1.50);
+          localStorage.setItem('x402stream_mock_balance', '1.50');
+        } else {
+          setMockBalance(val);
+        }
+      } else {
+        setMockBalance(1.50);
+        localStorage.setItem('x402stream_mock_balance', '1.50');
       }
     }
   }, []);

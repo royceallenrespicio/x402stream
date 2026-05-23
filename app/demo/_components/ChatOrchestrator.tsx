@@ -50,8 +50,10 @@ export default function ChatOrchestrator({
 
   // Handle auto-scroll
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [pipelineLogs, errorText, running]);
+    if (running) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [pipelineLogs.length, errorText, running]);
 
   // Parse logs into structured messages
   const parseLogs = (): ChatMessage[] => {
