@@ -59,3 +59,27 @@ export interface ExecutionSession {
   ledger: LedgerEntry[];
   progressValue: number;
 }
+
+export interface PipelineEventData {
+  message?: string;
+  agentId?: string;
+  agentName?: string;
+  title?: string;
+  status?: 'idle' | 'thinking' | 'calling_vendor' | 'payment_challenged' | 'paying' | 'completed';
+  reasoning?: string;
+  challengeHeader?: {
+    challengeId: string;
+  };
+  vendorName?: string;
+  cost?: string;
+  recipient?: string;
+  txHash?: string;
+  isRealTx?: boolean;
+  result?: string;
+  verification?: string;
+  realOnChain?: boolean;
+  finalSummary?: string;
+  error?: string;
+  gasFee?: string;
+}
+
