@@ -129,7 +129,7 @@ x402stream interacts natively with the **Morph Hoodi Testnet**:
 - **Currency**: `ETH`
 - **Block Explorer**: `https://explorer-hoodi.morph.network`
 
-*Need testnet funds?* Grab some native ETH from the [Morph Faucet](https://morphl2.io) to perform real, end-to-end on-chain agent payment settlements!
+*Need testnet funds?* Grab some native ETH from the [Morph Faucet](https://faucet-hoodi.morph.network/) to perform real, end-to-end on-chain agent payment settlements!
 
 ---
 
