@@ -7,6 +7,7 @@
 [![Viem](https://img.shields.io/badge/Viem-2.50.4-black?style=flat-square&logo=ethereum&logoColor=white)](https://viem.sh)
 [![Morph L2](https://img.shields.io/badge/Morph_L2-Hoodi_Testnet-yellow?style=flat-square)](https://morphl2.io)
 [![Groq](https://img.shields.io/badge/Groq-Llama_3.3_70B-orange?style=flat-square)](https://groq.com)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
 
 **x402stream** is a state-of-the-art multi-agent autonomous payment orchestration platform. It enables AI agents to coordinate, reason, and autonomously settle payments with third-party service vendors using standard web protocols. By leveraging **HTTP 402 (Payment Required)** challenges and **Morph L2 (Hoodi Testnet)** smart execution, x402stream demonstrates the future of agentic web economy where AI agents pay for the APIs and services they consume to achieve a complex user-defined goal.
 
@@ -135,4 +136,4 @@ x402stream interacts natively with the **Morph Hoodi Testnet**:
 
 ## 🛡️ License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
