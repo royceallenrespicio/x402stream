@@ -13,16 +13,6 @@ export default function SettingsHeader({ realAddress }: SettingsHeaderProps) {
       <div>
         <h1 className="text-fluid-lg font-black tracking-tight text-foreground flex items-center gap-2">
           System Settings
-          <Badge
-            variant="outline"
-            className={`border-border text-[10px] font-bold transition-all ${
-              realAddress 
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                : 'bg-muted text-muted-foreground'
-            }`}
-          >
-            {realAddress ? 'Morph Testnet Active' : 'Simulation Mode'}
-          </Badge>
         </h1>
         <p className="text-fluid-sm text-muted-foreground mt-1 max-w-xl">
           Configure secure EVM private keys, manage local sandboxed identity credentials, and adjust agent execution parameters.

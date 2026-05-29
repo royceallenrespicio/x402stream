@@ -65,7 +65,7 @@ export default function PrivateKeyConfig({
   };
 
   return (
-    <Card className="border border-border bg-card/60 backdrop-blur-xl overflow-hidden shadow-lg">
+    <Card className="border border-border bg-card overflow-hidden">
       <CardHeader className="pb-5">
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted border border-border text-muted-foreground shadow-inner">

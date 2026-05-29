@@ -33,9 +33,6 @@ export default function VendorsPage() {
       <div className="pb-4 border-b border-border">
         <h1 className="text-fluid-lg font-black tracking-tight text-foreground flex items-center gap-2">
           Mock Vendors
-          <Badge variant="outline" className="border-border bg-muted text-muted-foreground text-[10px] font-bold">
-            x402 Ecosystem
-          </Badge>
         </h1>
         <p className="text-fluid-sm text-muted-foreground mt-1">
           Explore and manage the simulated enterprise APIs integrated with the x402 settlement system.

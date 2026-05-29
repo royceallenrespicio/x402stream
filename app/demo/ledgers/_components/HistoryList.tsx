@@ -74,7 +74,7 @@ export default function HistoryList({
               className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col gap-2.5 relative group pointer-events-auto ${
                 isSelected
                   ? 'border-primary bg-accent/60'
-                  : 'border-border bg-card/40 hover:border-border/80 hover:bg-accent/40'
+                  : 'border-border bg-card hover:border-border/80 hover:bg-accent/40'
               }`}
               layout
             >

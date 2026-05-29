@@ -8,9 +8,6 @@ export default function LedgerHeader() {
     <div className="pb-4 border-b border-border">
       <h1 className="text-fluid-lg font-black tracking-tight text-foreground flex items-center gap-2">
         Transaction Ledger
-        <Badge variant="outline" className="border-border bg-muted text-muted-foreground text-[10px] font-bold">
-          Settlement Archives
-        </Badge>
       </h1>
       <p className="text-fluid-sm text-muted-foreground mt-1">
         Review archived multi-agent sequence run summaries, final execution payloads, and transaction cost logs.

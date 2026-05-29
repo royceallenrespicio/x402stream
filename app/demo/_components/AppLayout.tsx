@@ -30,18 +30,19 @@ function SidebarBrand() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  if (isCollapsed) return null;
-
   return (
-    <SidebarHeader className="px-5 py-4 border-b border-border bg-card/85 backdrop-blur-xl flex flex-row items-center gap-2 h-14 shrink-0">
-      <Link
-        href="/"
-        className="flex items-center gap-2 rounded-xl py-1 hover:opacity-80 transition-all cursor-pointer pointer-events-auto min-w-0"
-      >
-        <span className="font-extrabold text-sm text-foreground tracking-tight truncate">
-          x402stream
-        </span>
-      </Link>
+    <SidebarHeader className={`py-4 flex flex-row items-center h-14 shrink-0 transition-all ${isCollapsed ? 'justify-center px-0' : 'justify-between px-5'}`}>
+      {!isCollapsed && (
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-xl py-1 hover:opacity-80 transition-all cursor-pointer pointer-events-auto min-w-0"
+        >
+          <span className="font-extrabold text-sm text-foreground tracking-tight truncate">
+            x402stream
+          </span>
+        </Link>
+      )}
+      <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors pointer-events-auto cursor-pointer hidden lg:inline-flex" />
     </SidebarHeader>
   );
 }
@@ -118,11 +119,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <TooltipProvider delayDuration={0}>
       <SidebarProvider>
         <div className="flex min-h-screen bg-background font-sans text-foreground w-full">
-          <Sidebar className="hidden lg:flex border-r border-border bg-card/85 backdrop-blur-xl text-foreground">
+          <Sidebar collapsible="icon" className="hidden lg:flex border-r border-border bg-card/85 backdrop-blur-xl text-foreground">
             <SidebarBrand />
 
             {/* Navigation Menu */}
-            <SidebarContent className="flex-1 px-4 py-6">
+            <SidebarContent className="flex-1 px-4 py-6 group-data-[collapsible=icon]:px-2">
               <SidebarMenu className="space-y-1">
                 {navItems.map((item) => {
                   const isActive = pathname === item.href;
@@ -138,16 +139,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           : 'text-muted-foreground hover:text-foreground hover:bg-accent/40 border border-transparent'
                           }`}
                       >
-                        <Link href={item.href} className="flex items-center gap-3 w-full">
-                          <Icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                        <Link href={item.href} className="flex items-center gap-3 w-full whitespace-nowrap">
+                          <Icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-foreground' : 'text-muted-foreground group-hover/menu-button:text-foreground'}`} />
                           <span>{item.label}</span>
-                          {isActive && (
-                            <motion.div
-                              layoutId="sidebarActiveMarker"
-                              className="absolute right-3.5 h-1.5 w-1.5 rounded-full bg-foreground"
-                              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                            />
-                          )}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -161,62 +155,61 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
           {/* Main Content Area Wrapper using Shadcn Inset */}
           <SidebarInset className="flex flex-col flex-1 bg-background text-foreground min-h-screen">
-            <header className="sticky top-0 z-30 flex items-center justify-between h-14 px-4 border-b border-border bg-card/85 backdrop-blur-xl w-full shrink-0">
-              <div className="flex items-center gap-3">
-                <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors pointer-events-auto cursor-pointer hidden lg:inline-flex" />
-                <Link href="/" className="lg:hidden font-extrabold text-sm text-foreground tracking-tight cursor-pointer">
-                  x402stream
-                </Link>
+            {/* Floating Top Right Controls */}
+            <div className="absolute top-4 right-4 z-30 flex items-center gap-3">
+              {/* Mock Cash Balance */}
+              <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-2.5 py-1 text-[10px] font-semibold text-muted-foreground shadow-sm">
+                <span className="text-muted-foreground/80 uppercase tracking-wider text-[8px] font-bold">Mock:</span>
+                <span className="text-foreground">{mockBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ETH</span>
               </div>
 
-              <div className="flex items-center gap-3">
-                {/* Mock Cash Balance */}
-                <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-2.5 py-1 text-[10px] font-semibold text-muted-foreground">
-                  <span className="text-muted-foreground/80 uppercase tracking-wider text-[8px] font-bold">Mock:</span>
-                  <span className="text-foreground">{mockBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ETH</span>
-                </div>
-
-                {/* Morph Testnet ETH */}
-                <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-2.5 py-1 text-[10px] font-semibold text-muted-foreground">
-                  <span className="text-muted-foreground/80 uppercase tracking-wider text-[8px] font-bold">Morph:</span>
-                  <span className="text-foreground font-mono">{parseFloat(realBalance).toFixed(4)} ETH</span>
-                  {realAddress && (
-                    <button
-                      onClick={async () => {
-                        setRefreshing(true);
-                        try {
-                          await refreshRealBalance();
-                        } finally {
-                          setRefreshing(false);
-                        }
-                      }}
-                      disabled={refreshing}
-                      className="text-muted-foreground hover:text-foreground transition-colors pointer-events-auto cursor-pointer"
-                    >
-                      <RefreshCw className={`h-2.5 w-2.5 ${refreshing ? 'animate-spin text-emerald-400' : ''}`} />
-                    </button>
-                  )}
-                </div>
-
+              {/* Morph Testnet ETH */}
+              <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-2.5 py-1 text-[10px] font-semibold text-muted-foreground shadow-sm">
+                <span className="text-muted-foreground/80 uppercase tracking-wider text-[8px] font-bold">Morph:</span>
+                <span className="text-foreground font-mono">{parseFloat(realBalance).toFixed(4)} ETH</span>
                 {realAddress && (
-                  <Badge variant="outline" className="border-border text-muted-foreground text-[10px] font-mono px-2 py-0.5 rounded-xl bg-card">
-                    {realAddress.slice(0, 4)}...{realAddress.slice(-3)}
-                  </Badge>
+                  <button
+                    onClick={async () => {
+                      setRefreshing(true);
+                      try {
+                        await refreshRealBalance();
+                      } finally {
+                        setRefreshing(false);
+                      }
+                    }}
+                    disabled={refreshing}
+                    className="text-muted-foreground hover:text-foreground transition-colors pointer-events-auto cursor-pointer"
+                  >
+                    <RefreshCw className={`h-2.5 w-2.5 ${refreshing ? 'animate-spin text-emerald-400' : ''}`} />
+                  </button>
                 )}
-
-                {/* Theme Toggle Button */}
-                <button
-                  onClick={toggleTheme}
-                  className="h-8 w-8 rounded-xl border border-border bg-card hover:bg-accent text-foreground flex items-center justify-center cursor-pointer pointer-events-auto transition-colors"
-                  title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-                >
-                  {theme === 'dark' ? <Sun className="h-3.5 w-3.5 text-zinc-400" /> : <Moon className="h-3.5 w-3.5 text-zinc-650" />}
-                </button>
               </div>
-            </header>
+
+              {realAddress && (
+                <Badge variant="outline" className="border-border text-muted-foreground text-[10px] font-mono px-2 py-0.5 rounded-xl bg-card shadow-sm hidden sm:inline-flex">
+                  {realAddress.slice(0, 4)}...{realAddress.slice(-3)}
+                </Badge>
+              )}
+
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                className="h-8 w-8 rounded-xl border border-border bg-card hover:bg-accent text-foreground flex items-center justify-center cursor-pointer pointer-events-auto transition-colors shadow-sm"
+                title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              >
+                {theme === 'dark' ? <Sun className="h-3.5 w-3.5 text-zinc-400" /> : <Moon className="h-3.5 w-3.5 text-zinc-650" />}
+              </button>
+            </div>
+
+            {/* Mobile Floating Logo */}
+            <div className="absolute top-4 left-4 z-30 lg:hidden">
+              <Link href="/" className="font-extrabold text-sm text-foreground tracking-tight cursor-pointer bg-card/85 backdrop-blur-xl px-3 py-1.5 rounded-xl border border-border shadow-sm">
+                x402stream
+              </Link>
+            </div>
 
             {/* Page Contents */}
-            <main className="flex-1 py-6 px-4 lg:px-8 pb-28 lg:pb-8 pt-6">
+            <main className="flex-1 py-6 px-4 lg:px-8 pb-28 lg:pb-8 pt-16">
               <div className="max-w-6xl mx-auto space-y-6">
                 {children}
               </div>

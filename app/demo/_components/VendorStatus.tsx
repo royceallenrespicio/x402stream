@@ -39,7 +39,7 @@ export default function VendorStatus({ activeSlug }: { activeSlug?: string }) {
   }, [activeSlug]);
 
   return (
-    <Card className="border border-border bg-card/65 backdrop-blur-xl">
+    <Card className="border border-border bg-card">
       <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -61,19 +61,17 @@ export default function VendorStatus({ activeSlug }: { activeSlug?: string }) {
 
       <CardContent className="space-y-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="w-full overflow-x-auto scrollbar-none pb-1">
-            <TabsList className="flex w-max bg-muted p-1 rounded-full gap-1">
-              {categories.map((category) => (
-                <TabsTrigger
-                  key={category}
-                  value={category}
-                  className="text-xs px-3.5 py-1.5 transition-all duration-200 cursor-pointer"
-                >
-                  {category}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+          <TabsList className="flex flex-wrap h-auto! w-full justify-start bg-muted p-1 rounded-2xl gap-1">
+            {categories.map((category) => (
+              <TabsTrigger
+                key={category}
+                value={category}
+                className="text-xs px-3.5 py-1.5 h-8! transition-all duration-200 cursor-pointer flex-1 sm:flex-none"
+              >
+                {category}
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
           {categories.map((category) => {
             const filteredVendors = vendorsData.filter((v) => v.category === category);

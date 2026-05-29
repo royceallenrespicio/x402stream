@@ -35,7 +35,7 @@ function LedgerItemRow({ entry }: LedgerItemRowProps) {
   };
 
   return (
-    <div className="border border-border bg-card/45 rounded-xl p-4 flex flex-col gap-3">
+    <div className="border border-border bg-card rounded-xl p-4 flex flex-col gap-3">
       {/* Header info */}
       <div className="flex items-center justify-between border-b border-border/50 pb-2">
         <div className="min-w-0">
@@ -119,7 +119,7 @@ function DetectedItemRow({ hash, idx }: DetectedItemRowProps) {
   };
 
   return (
-    <div className="border border-border bg-card/45 rounded-xl p-4 flex flex-col gap-3">
+    <div className="border border-border bg-card rounded-xl p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between border-b border-border/50 pb-2">
         <div>
           <span className="text-[9px] font-mono text-muted-foreground/60">Detected from logs</span>
@@ -210,7 +210,7 @@ export default function HistoryDetail({ selectedItem }: HistoryDetailProps) {
 
       {/* Technical Breakdown Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Card className="border border-border bg-card/60 p-3 flex flex-col justify-between">
+        <Card className="border border-border bg-card p-3 flex flex-col justify-between">
           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
             <Calendar className="h-3 w-3" /> Timestamp
           </span>
@@ -219,7 +219,7 @@ export default function HistoryDetail({ selectedItem }: HistoryDetailProps) {
           </span>
         </Card>
         
-        <Card className="border border-border bg-card/60 p-3 flex flex-col justify-between">
+        <Card className="border border-border bg-card p-3 flex flex-col justify-between">
           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
             <Coins className="h-3 w-3" /> Total Cost
           </span>
@@ -228,7 +228,7 @@ export default function HistoryDetail({ selectedItem }: HistoryDetailProps) {
           </span>
         </Card>
 
-        <Card className="border border-border bg-card/60 p-3 flex flex-col justify-between">
+        <Card className="border border-border bg-card p-3 flex flex-col justify-between">
           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
             <Users className="h-3 w-3" /> Agent Count
           </span>
@@ -237,7 +237,7 @@ export default function HistoryDetail({ selectedItem }: HistoryDetailProps) {
           </span>
         </Card>
 
-        <Card className="border border-border bg-card/60 p-3 flex flex-col justify-between">
+        <Card className="border border-border bg-card p-3 flex flex-col justify-between">
           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
             {selectedItem.realOnChain ? <ShieldCheck className="h-3 w-3 text-emerald-500" /> : <Zap className="h-3 w-3 text-muted-foreground" />}
             Network Status

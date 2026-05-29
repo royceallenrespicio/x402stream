@@ -94,7 +94,7 @@ export default function AgentWorkspace({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center border border-dashed border-border bg-card/45 backdrop-blur-sm rounded-2xl p-8 text-center min-h-[220px] space-y-4 w-full"
+          className="flex flex-col items-center justify-center border border-dashed border-border bg-card shadow-sm rounded-2xl p-8 text-center min-h-[220px] space-y-4 w-full"
         >
           <div className="h-12 w-12 rounded-2xl bg-muted border border-border flex items-center justify-center text-muted-foreground shadow-inner">
             <Plus className="h-6 w-6" />

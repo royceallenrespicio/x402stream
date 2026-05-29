@@ -111,7 +111,7 @@ export default function LedgersPage() {
         ) : (
           <ResizablePanelGroup
             orientation="horizontal"
-            className="min-h-[560px] rounded-xl border border-border overflow-hidden bg-card/40 backdrop-blur-xl"
+            className="min-h-[560px] rounded-xl border border-border overflow-hidden bg-card shadow-sm"
           >
             <ResizablePanel
               defaultSize={35}

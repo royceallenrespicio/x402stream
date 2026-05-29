@@ -183,9 +183,9 @@ export default function ChatOrchestrator({
   }
 
   return (
-    <Card className="border border-border bg-card/60 backdrop-blur-xl flex flex-col overflow-hidden h-[750px] shadow-2xl rounded-2xl transition-all duration-300 py-0">
+    <Card className="border border-border bg-card flex flex-col overflow-hidden h-[750px] rounded-2xl transition-all duration-300 py-0">
       {/* Integrated Header and Sessions Tab Bar */}
-      <CardHeader className="py-2.5 px-4 border-b border-border bg-background/80 shrink-0 flex flex-row items-center gap-4 justify-between h-14">
+      <CardHeader className="py-2.5 px-4 border-b border-border shrink-0 flex flex-row items-center gap-4 justify-between h-14">
         <div className="flex items-center gap-2 shrink-0">
           <div className="h-6 w-6 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground">
             <Terminal className="h-3.5 w-3.5" />
